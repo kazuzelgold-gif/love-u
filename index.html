@@ -16,6 +16,7 @@
             font-family: 'Arial', sans-serif;
         }
 
+        /* Bintang berkedip */
         .stars {
             position: absolute;
             width: 100%;
@@ -32,9 +33,10 @@
             50% { opacity: 1; }
         }
 
+        /* Teks utama */
         .text-main {
             position: absolute;
-            top: 25%;
+            top: 20%;
             width: 100%;
             text-align: center;
             color: white;
@@ -43,8 +45,12 @@
             letter-spacing: 2px;
             z-index: 10;
             text-shadow: 0 0 10px rgba(255,255,255,0.5);
+            opacity: 0;
+            animation: muncul 2s forwards;
+            animation-delay: 0.5s;
         }
 
+        /* Matahari/bulan merah */
         .sun {
             position: absolute;
             top: 40%;
@@ -56,57 +62,87 @@
             border-radius: 50%;
             box-shadow: 0 0 30px #dc2626, 0 0 60px #dc262680;
             z-index: 5;
+            opacity: 0;
+            animation: muncul 2s forwards;
+            animation-delay: 1s;
         }
 
-        .photo-line {
+        /* Wadah lingkaran putar */
+        .circle-wrapper {
             position: absolute;
             top: 50%;
-            width: 100%;
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 400px;
+            height: 400px;
             z-index: 8;
+            opacity: 0;
+            animation: muncul 2s forwards;
+            animation-delay: 1.5s;
         }
+
+        /* Lingkaran tempat foto muter */
+        .circle {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            animation: putar 15s linear infinite;
+        }
+
+        /* Foto-foto */
         .photo {
-            width: 60px;
-            height: 60px;
+            position: absolute;
+            width: 70px;
+            height: 70px;
             background: white;
-            border-radius: 8px;
+            border-radius: 12px;
             background-size: cover;
             background-position: center;
-            box-shadow: 0 0 15px rgba(255,255,255,0.3);
-            animation: float 3s ease-in-out infinite alternate;
-            opacity: 0.9;
+            box-shadow: 0 0 15px rgba(255,255,255,0.4);
+            transform-origin: center 200px; /* Titik poros putar */
+            opacity: 0;
+            animation: fotoMuncul 0.5s forwards;
         }
-        @keyframes float {
-            0% { transform: translateY(0px) rotate(-2deg); }
-            100% { transform: translateY(-15px) rotate(2deg); }
+
+        /* Animasi */
+        @keyframes muncul {
+            from { opacity: 0; transform: translate(-50%, -40%); }
+            to { opacity: 1; transform: translate(-50%, -50%); }
+        }
+
+        @keyframes putar {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes fotoMuncul {
+            from { opacity: 0; transform: scale(0.5); }
+            to { opacity: 1; transform: scale(1); }
         }
     </style>
 </head>
 <body>
 
+    <!-- Bintang latar -->
     <div class="stars" id="starsContainer"></div>
 
-    <!-- ✅ NAMA UDAH DIUBAH JADI SITI ANIDAH ZIKRA -->
+    <!-- Teks Utama -->
     <div class="text-main">Only For U, <span>Siti Anidah Zikra</span></div>
 
+    <!-- Matahari Merah -->
     <div class="sun"></div>
 
-    <div class="photo-line">
-        <div class="photo" style="background-image: url('https://i.ibb.co/7YhL9yX/1.jpg'); animation-delay: 0s"></div>
-        <div class="photo" style="background-image: url('https://i.ibb.co/2qgHd2b/2.jpg'); animation-delay: 0.2s"></div>
-        <div class="photo" style="background-image: url('https://i.ibb.co/3sLgqLk/3.jpg'); animation-delay: 0.4s"></div>
-        <div class="photo" style="background-image: url('https://i.ibb.co/5T3jG4v/4.jpg'); animation-delay: 0.6s"></div>
-        <div class="photo" style="background-image: url('https://i.ibb.co/7YhL9yX/1.jpg'); animation-delay: 0.8s"></div>
-        <div class="photo" style="background-image: url('https://i.ibb.co/2qgHd2b/2.jpg'); animation-delay: 1s"></div>
-        <div class="photo" style="background-image: url('https://i.ibb.co/3sLgqLk/3.jpg'); animation-delay: 1.2s"></div>
-        <div class="photo" style="background-image: url('https://i.ibb.co/5T3jG4v/4.jpg'); animation-delay: 1.4s"></div>
+    <!-- Wadah Lingkaran Putar -->
+    <div class="circle-wrapper">
+        <div class="circle" id="circlePhotos">
+            <!-- Foto akan dimasukkan pakai JS biar rapi -->
+        </div>
     </div>
 
     <script>
+        // Bikin bintang acak
         const starsContainer = document.getElementById('starsContainer');
-        for (let i = 0; i < 150; i++) {
+        for (let i = 0; i < 200; i++) {
             const star = document.createElement('div');
             star.classList.add('star');
             star.style.left = Math.random() * 100 + '%';
@@ -116,6 +152,35 @@
             star.style.animationDelay = Math.random() * 3 + 's';
             starsContainer.appendChild(star);
         }
+
+        // Link foto kamu
+        const fotoList = [
+            'https://i.ibb.co/7YhL9yX/1.jpg',
+            'https://i.ibb.co/2qgHd2b/2.jpg',
+            'https://i.ibb.co/3sLgqLk/3.jpg',
+            'https://i.ibb.co/5T3jG4v/4.jpg',
+            'https://i.ibb.co/7YhL9yX/1.jpg',
+            'https://i.ibb.co/2qgHd2b/2.jpg',
+            'https://i.ibb.co/3sLgqLk/3.jpg',
+            'https://i.ibb.co/5T3jG4v/4.jpg'
+        ];
+
+        const circle = document.getElementById('circlePhotos');
+        const jumlahFoto = fotoList.length;
+
+        // Taruh foto melingkar
+        fotoList.forEach((link, index) => {
+            const photo = document.createElement('div');
+            photo.classList.add('photo');
+            photo.style.backgroundImage = `url('${link}')`;
+            
+            // Hitung posisi sudut biar melingkar rata
+            const sudut = (index * 360) / jumlahFoto;
+            photo.style.transform = `rotate(${sudut}deg) translateY(-200px)`;
+            photo.style.animationDelay = `${index * 0.2}s`; // Muncul satu-satu
+
+            circle.appendChild(photo);
+        });
     </script>
 
 </body>
